@@ -1,3 +1,26 @@
+body {
+  background-color: #f9f8f3;
+  background-image: 
+    radial-gradient(at 10% 10%, rgba(202, 151, 101, 0.3) 0px, transparent 50%),
+    radial-gradient(at 90% 10%, rgba(24, 62, 49, 0.2) 0px, transparent 50%),
+    radial-gradient(at 90% 90%, rgba(202, 151, 101, 0.25) 0px, transparent 50%),
+    radial-gradient(at 10% 90%, rgba(93, 132, 114, 0.2) 0px, transparent 50%);
+  background-attachment: fixed;
+  background-size: 200% 200%;
+  animation: fluidBackground 12s ease-in-out infinite alternate;
+}
+
+@keyframes fluidBackground {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 100% 100%; }
+}
+
+@keyframes fluidBackground {
+  0% { background-position: 0% 0%; }
+  50% { background-position: 100% 100%; }
+  100% { background-position: 0% 0%; }
+}
+
 :root {
   font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: #203d34;
@@ -1526,4 +1549,111 @@ p {
     padding: 10px 10px 0 10px;
     gap: 4px;
   }
+}
+
+/* Glassmorphism Navbar */
+.site-header {
+  background: rgba(255, 253, 248, 0.65) !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+}
+
+/* Glass Hero Mockup */
+.mockup-window {
+  background: rgba(255, 255, 255, 0.4) !important;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 24px 64px rgba(24, 62, 49, 0.15), inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+}
+
+.mockup-top-bar {
+  background: rgba(255, 255, 255, 0.3) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.mockup-content-mini {
+  background: transparent !important;
+}
+
+.mockup-stat-card {
+  background: rgba(255, 255, 255, 0.5) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+/* Glass Package Cards */
+.package-card {
+  background: rgba(255, 255, 255, 0.35) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.6) !important;
+  box-shadow: 0 8px 32px rgba(24, 62, 49, 0.08) !important;
+  border-radius: 28px !important; /* More fluid, rounder edges */
+}
+
+.package-card:hover {
+  background: rgba(255, 255, 255, 0.6) !important;
+  box-shadow: 0 16px 48px rgba(24, 62, 49, 0.15) !important;
+  border: 1px solid rgba(255, 255, 255, 0.9) !important;
+}
+
+.package-body {
+  background: transparent;
+}
+
+/* Glass Bento Cards */
+.bento-card {
+  background: rgba(255, 255, 255, 0.35) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.6) !important;
+  box-shadow: 0 8px 32px rgba(24, 62, 49, 0.08) !important;
+  border-radius: 32px !important; /* Extra fluid corners */
+}
+
+.bento-large {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.2) 100%) !important;
+}
+
+.bento-mini-card {
+  background: rgba(255, 255, 255, 0.6) !important;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Glass Booking Cards (Staff & Customer) */
+.booking-card {
+  background: rgba(255, 255, 255, 0.4) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.6) !important;
+  box-shadow: 0 8px 32px rgba(24, 62, 49, 0.06) !important;
+  border-radius: 24px !important;
+}
+
+/* Glass Inputs (Search bar, Dropdowns) */
+.staff-search input,
+.status-control select,
+.form-stack input,
+.form-stack select,
+.form-stack textarea {
+  background: rgba(255, 255, 255, 0.5) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.8) !important;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+  transition: all 0.3s ease;
+}
+
+.staff-search input:focus,
+.status-control select:focus,
+.form-stack input:focus,
+.form-stack select:focus,
+.form-stack textarea:focus {
+  background: rgba(255, 255, 255, 0.8) !important;
+  border: 1px solid #53906d !important;
+  box-shadow: 0 0 0 4px rgba(83, 144, 109, 0.15) !important;
 }

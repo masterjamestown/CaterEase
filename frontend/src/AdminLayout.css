@@ -1,20 +1,14 @@
 .al-wrapper {
   display: flex;
   min-height: 100vh;
-  background: #f9f8f3;
+  background: transparent !important; /* Changed from #f9f8f3 */
 }
 
 .al-sidebar {
-  width: 260px;
-  background: #183e31;
-  color: #d1dfd3;
-  display: flex;
-  flex-direction: column;
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  padding: 24px 0;
-  flex-shrink: 0;
+  background: rgba(24, 62, 49, 0.65) !important; /* Lowered from 0.85 to let light through */
+  backdrop-filter: blur(30px) !important; /* Increased blur */
+  -webkit-backdrop-filter: blur(30px) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .al-brand {
@@ -232,4 +226,42 @@
     background: #ca9765;
     color: #183e31;
   }
+}
+
+/* Glass Sidebar */
+.al-sidebar {
+  background: rgba(24, 62, 49, 0.85) !important;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.1);
+}
+
+.al-nav-link {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.al-nav-link:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(8px);
+}
+
+.al-nav-link.active {
+  background: rgba(202, 151, 101, 0.9) !important;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 12px rgba(202, 151, 101, 0.3);
+}
+
+.al-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.al-logout {
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.al-logout:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
 }
