@@ -32,19 +32,25 @@ export default function AdminOverview() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  useEffect(() => {
+  const loadData = () => {
+    setLoading(true);
+    setError('');
     api('/admin/overview')
       .then(setData)
       .catch(err => setError(err.message))
       .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    loadData();
   }, []);
 
-  if (loading) {
-    return <section className="shell section ov-page"><div className="ov-loading">Loading dashboard...</div></section>;
+  if (loading && !data) {
+    return <section className="ov-page"><div className="ov-loading">Loading dashboard...</div></section>;
   }
 
   if (error) {
-    return <section className="shell section ov-page"><div className="ov-alert" role="alert">{error}</div></section>;
+    return <section className="ov-page"><div className="ov-alert" role="alert">{error}</div></section>;
   }
 
   if (!data) return null;
@@ -62,7 +68,12 @@ export default function AdminOverview() {
           <span className="eyebrow green">ADMINISTRATOR</span>
           <h1>Overview dashboard</h1>
         </div>
-        <p>A live snapshot of CaterEase bookings, packages, and customer activity.</p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
+          <p>A live snapshot of CaterEase bookings, packages, and customer activity.</p>
+          <button onClick={loadData} className="button small" disabled={loading}>
+            {loading ? 'Refreshing...' : 'Refresh Data'}
+          </button>
+        </div>
       </div>
 
       <div className="ov-stats">
