@@ -36,5 +36,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/admin/packages', [AdminController::class, 'createPackage']);
         Route::patch('/admin/packages/{id}/visibility', [AdminController::class, 'visibility']);
         Route::get('/admin/overview', [AdminController::class, 'overview']);
+        
+        Route::get('/admin/users', [AdminController::class, 'users']);
+        Route::patch('/admin/users/{id}/role', [AdminController::class, 'updateUserRole']);
+        Route::delete('/admin/users/{id}', [AdminController::class, 'destroyUser']);
     });
 });

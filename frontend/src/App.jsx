@@ -1,3 +1,4 @@
+import AdminUsers from './pages/AdminUsers';
 import { BrowserRouter, Link, NavLink, Navigate, Route, Routes, useLocation, useNavigate, Outlet } from 'react-router-dom';
 import { AuthProvider, useAuth } from './AuthContext';
 import Home from './pages/Home';
@@ -99,6 +100,7 @@ export default function App() {
           <Route path="/staff" element={<ProtectedRoute roles={['staff', 'admin']}><AdminLayout><Staff /></AdminLayout></ProtectedRoute>} />
           <Route path="/admin/overview" element={<ProtectedRoute roles={['admin']}><AdminLayout><AdminOverview /></AdminLayout></ProtectedRoute>} />
           <Route path="/admin" element={<ProtectedRoute roles={['admin']}><AdminLayout><Admin /></AdminLayout></ProtectedRoute>} />
+          <Route path="/admin/users" element={<ProtectedRoute roles={['admin']}><AdminLayout><AdminUsers /></AdminLayout></ProtectedRoute>} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>

@@ -64,6 +64,11 @@ export default function AdminLayout({ children }) {
               <span className="al-icon">◈</span> Manage Packages
             </NavLink>
           )}
+                    {user?.role === 'admin' && (
+            <NavLink to="/admin/users" className={({ isActive }) => isActive ? 'al-nav-link active' : 'al-nav-link'} onClick={closeSidebar}>
+              <span className="al-icon">❖</span> User Accounts
+            </NavLink>
+          )}
 
           <div className="al-nav-divider"></div>
 

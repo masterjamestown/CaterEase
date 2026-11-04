@@ -117,4 +117,71 @@ class AdminController extends Controller
             'recentBookings' => $recentBookings->map($formatBooking)
         ]);
     }
+
+    public function users()
+    {
+        $users = User::orderBy('role', 'asc')->orderBy('full_name', 'asc')->get();
+        
+        $formattedUsers = $users->map(function ($user) {
+            return [
+                'user_id' => $user->user_id,
+                'full_name' => $user->full_name,
+                'email' => $user->email,
+                'role' => $user->role,
+                'created_at' => $user->created_at ? $user->created_at->format('Y-m-d') : null,
+            ];
+        });
+
+        return response()->json($formattedUsers);
+    }
+
+    public function updateUserRole(Request $request, $id)
+    {
+        $role = $request->input('role');
+        $allowedRoles = ['customer', 'staff', 'admin'];
+
+        if (!in_array($role, $allowedRoles)) {
+            return response()->json(['error' => 'Invalid role.'], 400);
+        }
+
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json(['error' => 'User not found.'], 404);
+        }
+
+        if ($user->user_id === $request->user()->user_id && $role !== 'admin') {
+            return response()->json(['error' => 'You cannot demote yourself.'], 400);
+        }
+
+        $user->role = $role;
+        $user->save();
+
+        return response()->json(['message' => 'User role updated successfully.']);
+    }
+
+    public function destroyUser(Request $request, $id)
+    {
+        $user = User::find($id);
+        
+        if (!$user) {
+            return response()->json(['error' => 'User not found.'], 404);
+        }
+
+        if ($user->role === 'admin') {
+            return response()->json(['error' => 'Admin accounts cannot be deleted.'], 403);
+        }
+
+        if ($user->user_id === $request->user()->user_id) {
+            return response()->json(['error' => 'You cannot delete your own account.'], 400);
+        }
+
+        $hasBookings = Booking::where('customer_id', $id)->exists();
+        if ($hasBookings) {
+            return response()->json(['error' => 'Cannot delete this user because they have existing bookings.'], 400);
+        }
+
+        $user->delete();
+
+        return response()->json(['message' => 'User deleted successfully.']);
+    }
 }
