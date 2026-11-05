@@ -42,13 +42,29 @@ export default function Staff() {
   }
 
   async function payBooking(id) {
-    if (!window.confirm('Mark this booking as paid?')) return;
+    if (!window.confirm('Mark this booking as paid (Cash)?')) return;
     setBusy(id);
     setError('');
     setMessage('');
     try {
       await api(`/staff/bookings/${id}/pay`, { method: 'POST' });
-      setMessage(`Payment recorded for booking #${id}.`);
+      setMessage(`Cash payment recorded for booking #${id}.`);
+      await load();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  async function refundBooking(id) {
+    if (!window.confirm('Are you sure you want to refund this payment?')) return;
+    setBusy(id);
+    setError('');
+    setMessage('');
+    try {
+      await api(`/staff/bookings/${id}/refund`, { method: 'POST' });
+      setMessage(`Payment refunded for booking #${id}.`);
       await load();
     } catch (err) {
       setError(err.message);
@@ -150,22 +166,36 @@ export default function Staff() {
               </select>
             </div>
 
-            <div className="status-control" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div className="status-control" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
               <label style={{ marginBottom: 0 }}>Payment status</label>
-              {item.payment_status === 'paid' ? (
-                <span className="status status-completed">PAID</span>
-              ) : item.status === 'cancelled' ? (
-                <span className="status status-pending" style={{ background: '#f3eee5', color: '#86715d' }}>UNPAID</span>
-              ) : (
-                <button
-                  className="button small"
-                  type="button"
-                  onClick={() => payBooking(item.booking_id)}
-                  disabled={busy === item.booking_id}
-                >
-                  {busy === item.booking_id ? 'Saving...' : 'Mark as Paid'}
-                </button>
-              )}
+              
+              <div style={{ display: 'flex', gap: '8px' }}>
+                {item.payment_status === 'paid' ? (
+                  <>
+                    <span className="status status-completed">
+                      PAID {item.payment_method ? `(${item.payment_method})` : ''}
+                    </span>
+                    {item.status === 'cancelled' && (
+                      <button className="button small outline" onClick={() => refundBooking(item.booking_id)} disabled={busy === item.booking_id} style={{ color: '#914c49', borderColor: '#f5e0dc' }}>
+                        Refund
+                      </button>
+                    )}
+                  </>
+                ) : item.payment_status === 'refunded' ? (
+                  <span className="status status-cancelled">REFUNDED</span>
+                ) : item.status === 'cancelled' ? (
+                  <span className="status status-pending" style={{ background: '#f3eee5', color: '#86715d' }}>UNPAID</span>
+                ) : (
+                  <button
+                    className="button small"
+                    type="button"
+                    onClick={() => payBooking(item.booking_id)}
+                    disabled={busy === item.booking_id}
+                  >
+                    {busy === item.booking_id ? 'Saving...' : 'Mark as Paid'}
+                  </button>
+                )}
+              </div>
             </div>
           </article>
         ))}

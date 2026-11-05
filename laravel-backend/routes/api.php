@@ -23,12 +23,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/bookings', [BookingController::class, 'store']);
         Route::get('/bookings/mine', [BookingController::class, 'mine']);
         Route::patch('/bookings/{id}/cancel', [BookingController::class, 'cancel']);
+        Route::post('/bookings/{id}/pay-online', [BookingController::class, 'payOnline']);
     });
 
     Route::middleware('role:staff,admin')->group(function () {
         Route::get('/staff/bookings', [StaffController::class, 'index']);
         Route::patch('/staff/bookings/{id}/status', [StaffController::class, 'updateStatus']);
         Route::post('/staff/bookings/{id}/pay', [StaffController::class, 'pay']);
+        Route::post('/staff/bookings/{id}/refund', [StaffController::class, 'refund']);
     });
 
     Route::middleware('role:admin')->group(function () {
@@ -36,7 +38,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/admin/packages', [AdminController::class, 'createPackage']);
         Route::patch('/admin/packages/{id}/visibility', [AdminController::class, 'visibility']);
         Route::get('/admin/overview', [AdminController::class, 'overview']);
-        
         Route::get('/admin/users', [AdminController::class, 'users']);
         Route::patch('/admin/users/{id}/role', [AdminController::class, 'updateUserRole']);
         Route::delete('/admin/users/{id}', [AdminController::class, 'destroyUser']);

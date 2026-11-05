@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Booking;
 use App\Models\Package;
+use App\Models\Payment;
 use Illuminate\Http\Request;
 
 class BookingController extends Controller
@@ -68,7 +69,11 @@ class BookingController extends Controller
             return response()->json(['error' => 'You have 3 pending bookings. Please wait for staff to review them before booking again.'], 400);
         }
 
-        $quotedTotal = number_format($package->price_per_guest * $guestCount, 2, '.', '');
+        $baseTotal = $package->price_per_guest * $guestCount;
+        $dayOfWeek = date('w', strtotime($eventDate));
+        $isWeekend = ($dayOfWeek == 0 || $dayOfWeek == 6);
+        $surcharge = $isWeekend ? $baseTotal * 0.15 : 0;
+        $quotedTotal = number_format($baseTotal + $surcharge, 2, '.', '');
 
         $booking = Booking::create([
             'customer_id' => $userId,
@@ -114,5 +119,38 @@ class BookingController extends Controller
         $booking->save();
 
         return response()->json(['message' => 'Booking cancelled successfully.']);
+    }
+
+    public function payOnline(Request $request, $id)
+    {
+        $booking = Booking::find($id);
+
+        if (!$booking) {
+            return response()->json(['error' => 'Booking not found.'], 404);
+        }
+        if ($booking->customer_id !== $request->user()->user_id) {
+            return response()->json(['error' => 'You can only pay for your own bookings.'], 403);
+        }
+        if (!in_array($booking->status, ['pending', 'confirmed'])) {
+            return response()->json(['error' => 'This booking cannot be paid online.'], 400);
+        }
+
+        $existingPayment = Payment::where('booking_id', $id)->where('status', 'paid')->first();
+        if ($existingPayment) {
+            return response()->json(['error' => 'This booking has already been paid.'], 400);
+        }
+
+        Payment::create([
+            'booking_id' => $id,
+            'amount' => $booking->quoted_total,
+            'payment_method' => 'Online (GCash/Card)',
+            'status' => 'paid',
+            'paid_at' => now()
+        ]);
+
+        $booking->status = 'confirmed';
+        $booking->save();
+
+        return response()->json(['message' => 'Payment successful. Booking confirmed.']);
     }
 }

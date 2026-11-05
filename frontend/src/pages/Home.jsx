@@ -39,7 +39,6 @@ export default function Home() {
   return (
     <>
       <section className="hero">
-        <img src="/hero-bg.jpg" alt="Catering setup" className="hero-image" />
         <div className="hero-overlay"></div>
         
         <div className="shell hero-grid">

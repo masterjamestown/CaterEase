@@ -24,6 +24,7 @@ class StaffController extends Controller
             'full_name' => $booking->customer ? $booking->customer->full_name : null,
             'email' => $booking->customer ? $booking->customer->email : null,
             'payment_status' => $booking->payment ? $booking->payment->status : null,
+            'payment_method' => $booking->payment ? $booking->payment->payment_method : null,
         ];
     }
 
@@ -83,5 +84,23 @@ class StaffController extends Controller
         ]);
 
         return response()->json(['message' => 'Payment recorded successfully.']);
+    }
+
+    public function refund(Request $request, $id)
+    {
+        $booking = Booking::find($id);
+        if (!$booking) {
+            return response()->json(['error' => 'Booking not found.'], 404);
+        }
+
+        $payment = Payment::where('booking_id', $id)->where('status', 'paid')->first();
+        if (!$payment) {
+            return response()->json(['error' => 'No paid transaction found for this booking.'], 404);
+        }
+
+        $payment->status = 'refunded';
+        $payment->save();
+
+        return response()->json(['message' => 'Payment refunded successfully.']);
     }
 }
