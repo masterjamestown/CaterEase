@@ -8,7 +8,7 @@ export default function Book() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
-  const [form, setForm] = useState({ package_id: params.get('package') || '', event_date: '', event_time: '12:00', guest_count: '', venue: '', special_requests: '' });
+  const [form, setForm] = useState({ package_id: params.get('package') || '', event_date: '', event_time: '12:00', guest_count: '', venue: '', contact_number: '', special_requests: '' });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -42,16 +42,16 @@ export default function Book() {
     <section className="shell section narrow-section">
       <Link to="/" className="back-link">← Back to packages</Link>
       <div className="page-heading">
-        <span className="eyebrow green">LET'S MAKE IT HAPPEN</span>
-        <h1>Book your celebration.</h1>
-        <p>Tell us about your event. We'll review your request before confirming.</p>
+        <span className="ce-eyebrow">LET'S MAKE IT HAPPEN</span>
+        <h1 className="admin-title">Book your <span className="ce-gold-italic">celebration.</span></h1>
+        <p className="muted" style={{ marginTop: '10px' }}>Tell us about your event. We'll review your request before confirming.</p>
       </div>
-      <div className="form-card book-card">
+      <div className="form-card book-card" style={{ marginTop: '30px' }}>
         {loading ? (
           <div className="empty">Loading packages...</div>
         ) : (
           <form className="form-stack" onSubmit={submit}>
-            {error && <p className="notice warning" role="alert">{error}</p>}
+            {error && <div className="auth-status-banner" style={{ borderLeftColor: '#914c49', backgroundColor: '#f5e0dc', color: '#914c49', marginBottom: '10px' }} role="alert">{error}</div>}
             <label>
               Catering package
               <select required value={form.package_id} onChange={e => setForm({ ...form, package_id: e.target.value, guest_count: '' })}>
@@ -67,6 +67,7 @@ export default function Book() {
             </div>
             <label>Number of guests<input required type="number" min={selected?.minimum_guests || 1} max={100000} value={form.guest_count} onChange={e => setForm({ ...form, guest_count: e.target.value })} placeholder={selected ? `At least ${selected.minimum_guests} guests` : 'Select a package first'} /></label>
             <label>Event venue<input required minLength={3} maxLength={255} value={form.venue} onChange={e => setForm({ ...form, venue: e.target.value })} placeholder="Venue / full location" /></label>
+            <label>Contact number<input required minLength={7} maxLength={20} type="tel" value={form.contact_number} onChange={e => setForm({ ...form, contact_number: e.target.value })} placeholder="e.g. 09171234567" /></label>
             <label>Special requests <span className="optional">(optional)</span><textarea rows={4} maxLength={1000} value={form.special_requests} onChange={e => setForm({ ...form, special_requests: e.target.value })} placeholder="Allergies, setup preferences, or other details" /></label>
             
             <div className="estimate">
@@ -82,7 +83,7 @@ export default function Book() {
               <strong>{estimated === null ? '—' : peso(estimated)}</strong>
             </div>
             
-            <button className="button full" type="submit" disabled={saving || !packages.length}>{saving ? 'Submitting...' : 'Submit booking request ↗'}</button>
+            <button className="ce-btn ce-btn-gold ce-btn-full" type="submit" disabled={saving || !packages.length}>{saving ? 'Submitting...' : 'Submit booking request ↗'}</button>
             <p className="fine-print">Submitting a request does not confirm the date or process any payment.</p>
           </form>
         )}

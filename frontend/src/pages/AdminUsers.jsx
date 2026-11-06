@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { api } from '../api';
-import './AdminOverview.css';
 
 export default function AdminUsers() {
   const [users, setUsers] = useState([]);
@@ -56,65 +55,69 @@ export default function AdminUsers() {
   }
 
   return (
-    <section className="ov-page">
-      <div className="ov-head">
+    <section className="admin-page-wrapper">
+      <div className="admin-header">
         <div>
-          <span className="eyebrow green">ADMINISTRATOR</span>
-          <h1>User Accounts</h1>
+          <span className="ce-eyebrow">ADMINISTRATOR</span>
+          <h1 className="admin-title">User <span className="ce-gold-italic">Accounts</span></h1>
         </div>
-        <p>Manage system access and promote customers to staff or admin roles.</p>
+        <p className="admin-subtitle">Manage system access and promote customers to staff or admin roles.</p>
       </div>
 
-      {error && <div className="ov-alert" role="alert">{error}</div>}
-      {message && <div className="notice success" role="status">{message}</div>}
+      {error && <div className="auth-status-banner" style={{ borderLeftColor: '#914c49', backgroundColor: '#f5e0dc', color: '#914c49', marginBottom: '20px' }} role="alert">{error}</div>}
+      {message && <div className="ce-alert-success" style={{ marginBottom: '20px' }} role="status">{message}</div>}
 
-      {loading && <div className="ov-loading">Loading users...</div>}
+      {loading && <div className="empty">Loading users...</div>}
 
       {!loading && users.length > 0 && (
-        <div className="ov-panel">
-          <table className="ov-recent-table">
+        <div className="admin-table-card">
+          <table className="premium-table">
             <thead>
               <tr>
                 <th>User Info</th>
                 <th>Joined</th>
-                <th>Current Role</th>
-                <th style={{ textAlign: 'center' }}>Actions</th>
+                <th>Role</th>
+                <th style={{ textAlign: 'right' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
               {users.map(user => (
                 <tr key={user.user_id}>
                   <td>
-                    <div className="ov-cell-stack" style={{ alignItems: 'flex-start', textAlign: 'left' }}>
-                      <strong>{user.full_name}</strong>
-                      <small>{user.email}</small>
+                    <div className="user-cell">
+                      <div className="user-avatar">
+                        {user.full_name.charAt(0).toUpperCase()}
+                      </div>
+                      <div className="user-info-stack">
+                        <strong>{user.full_name}</strong>
+                        <small>{user.email}</small>
+                      </div>
                     </div>
                   </td>
-                  <td>{user.created_at}</td>
+                  <td className="table-date">{user.created_at}</td>
                   <td>
-                    <span className={`ov-pill ${user.role === 'admin' ? 'confirmed' : user.role === 'staff' ? 'in_preparation' : 'pending'}`}>
+                    <span className={`role-pill role-${user.role}`}>
                       {user.role}
                     </span>
                   </td>
                   <td>
-                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center', justifyContent: 'flex-end' }}>
-                      <select 
-                        value={user.role} 
+                    <div className="table-actions">
+                      <select
+                        value={user.role}
                         onChange={(e) => changeRole(user.user_id, e.target.value)}
                         disabled={busy === user.user_id || user.role === 'admin'}
-                        className="role-select"
+                        className="premium-select"
                       >
                         <option value="customer">Customer</option>
                         <option value="staff">Staff</option>
                         <option value="admin">Admin</option>
                       </select>
-
                       {user.role !== 'admin' && (
-                        <button 
+                        <button
                           onClick={() => deleteUser(user.user_id)}
                           disabled={busy === user.user_id}
-                          className="button small outline"
-                          style={{ color: '#914c49', borderColor: '#f5e0dc', padding: '8px 12px' }}
+                          className="premium-delete-btn"
+                          title="Delete User"
                         >
                           {busy === user.user_id ? '...' : 'Delete'}
                         </button>

@@ -48,23 +48,30 @@ export default function AdminLayout({ children }) {
           onClick={() => { navigate(user?.role === 'admin' ? '/admin/overview' : '/staff'); closeSidebar(); }} 
           style={{ cursor: 'pointer' }}
         >
-          <span className="al-brand-mark">✳</span> Cater<span>Ease</span>
+          <span className="al-brand-mark">✳</span> 
+          <span className="al-brand-text">Cater<span>Ease</span></span>
         </div>
 
         <nav className="al-nav">
           <span className="al-nav-label">Menu</span>
-          <NavLink to="/admin/overview" className={({ isActive }) => isActive ? 'al-nav-link active' : 'al-nav-link'} onClick={closeSidebar}>
-            <span className="al-icon">◫</span> Dashboard
-          </NavLink>
+          
+          {user?.role === 'admin' && (
+            <NavLink to="/admin/overview" className={({ isActive }) => isActive ? 'al-nav-link active' : 'al-nav-link'} onClick={closeSidebar}>
+              <span className="al-icon">◫</span> Dashboard
+            </NavLink>
+          )}
+          
           <NavLink to="/staff" className={({ isActive }) => isActive ? 'al-nav-link active' : 'al-nav-link'} onClick={closeSidebar}>
             <span className="al-icon">☷</span> Operations
           </NavLink>
+          
           {user?.role === 'admin' && (
             <NavLink to="/admin" end className={({ isActive }) => isActive ? 'al-nav-link active' : 'al-nav-link'} onClick={closeSidebar}>
               <span className="al-icon">◈</span> Manage Packages
             </NavLink>
           )}
-                    {user?.role === 'admin' && (
+
+          {user?.role === 'admin' && (
             <NavLink to="/admin/users" className={({ isActive }) => isActive ? 'al-nav-link active' : 'al-nav-link'} onClick={closeSidebar}>
               <span className="al-icon">❖</span> User Accounts
             </NavLink>
@@ -79,8 +86,13 @@ export default function AdminLayout({ children }) {
 
         <div className="al-footer">
           <div className="al-user">
-            <span className="al-user-name">{user?.full_name}</span>
-            <span className="al-user-role">{user?.role}</span>
+            <div className="al-avatar">
+              {user?.full_name ? user.full_name.charAt(0).toUpperCase() : 'U'}
+            </div>
+            <div className="al-user-info">
+              <span className="al-user-name">{user?.full_name}</span>
+              <span className="al-user-role">{user?.role}</span>
+            </div>
           </div>
           <button className="al-logout" onClick={() => { logout(); navigate('/'); }}>
             Log out

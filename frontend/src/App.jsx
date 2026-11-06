@@ -1,4 +1,3 @@
-import AdminUsers from './pages/AdminUsers';
 import { BrowserRouter, Link, NavLink, Navigate, Route, Routes, useLocation, useNavigate, Outlet } from 'react-router-dom';
 import { AuthProvider, useAuth } from './AuthContext';
 import Home from './pages/Home';
@@ -8,6 +7,7 @@ import MyBookings from './pages/MyBookings';
 import Staff from './pages/Staff';
 import Admin from './pages/Admin';
 import AdminOverview from './pages/AdminOverview';
+import AdminUsers from './pages/AdminUsers';
 import AdminLayout from './AdminLayout';
 import './styles.css';
 
@@ -56,6 +56,7 @@ function Header() {
           {(user?.role === 'staff' || user?.role === 'admin') && <NavLink to="/staff">Operations</NavLink>}
           {user?.role === 'admin' && <NavLink to="/admin/overview">Dashboard</NavLink>}
           {user?.role === 'admin' && <NavLink to="/admin" end>Manage packages</NavLink>}
+          {user?.role === 'admin' && <NavLink to="/admin/users">User Accounts</NavLink>}
         </nav>
         <div className="nav-account">
           {user ? (
@@ -75,12 +76,8 @@ function Header() {
   );
 }
 
-function Footer() {
-  return <footer className="site-footer"><div className="shell footer-flex"><span className="brand footer-brand"><span className="brand-mark">✳</span> Cater<span>Ease</span></span><span>Beautiful events start with simple planning.</span><small>Information Management · Student project</small></div></footer>;
-}
-
 function PublicLayout() {
-  return <div className="app-shell"><Header /><main><Outlet /></main><Footer /></div>;
+  return <div className="app-shell"><Header /><main><Outlet /></main></div>;
 }
 
 export default function App() {

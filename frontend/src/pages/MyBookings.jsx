@@ -49,16 +49,17 @@ export default function MyBookings() {
 
   return (
     <section className="shell section">
-      <div className="section-heading">
+      <div className="my-bookings-header">
         <div>
-          <span className="eyebrow green">YOUR EVENTS IN ONE PLACE</span>
-          <h1>My bookings</h1>
+          <span className="ce-eyebrow">YOUR EVENTS IN ONE PLACE</span>
+          <h1 className="my-bookings-title">My <span className="ce-gold-italic">Bookings</span></h1>
         </div>
-        <Link className="button" to="/#packages">Plan another event ↗</Link>
+        <Link className="ce-btn ce-btn-outline" to="/#packages">Plan another event ↗</Link>
       </div>
 
-      {params.has('created') && <p className="notice success" role="status">Booking request submitted! Our team can now review it.</p>}
-      {error && <p className="notice warning">{error}</p>}
+      {params.has('created') && <div className="ce-alert-success" role="status">Booking request submitted! Our team can now review it.</div>}
+      {error && <div className="auth-status-banner" style={{ borderLeftColor: '#914c49', backgroundColor: '#f5e0dc', color: '#914c49', marginBottom: '20px' }} role="alert">{error}</div>}
+      
       {loading && <div className="empty">Loading bookings...</div>}
       {!loading && !error && !bookings.length && <div className="empty">No bookings yet. <Link to="/">Explore catering packages</Link> to get started.</div>}
       
@@ -67,7 +68,7 @@ export default function MyBookings() {
           <article className="booking-card" key={item.booking_id}>
             <div className="booking-top">
               <div>
-                <span className="eyebrow green">BOOKING #{item.booking_id}</span>
+                <span className="ce-eyebrow">BOOKING #{item.booking_id}</span>
                 <h3>{item.package_name}</h3>
               </div>
               <span className={`status status-${item.status}`}>{prettyStatus(item.status)}</span>
@@ -89,25 +90,25 @@ export default function MyBookings() {
               </div>
             </div>
 
-            {item.special_requests && <p className="requests"><strong>Requests:</strong> {item.special_requests}</p>}
+            {item.special_requests && <p style={{ marginTop: '15px', fontSize: '0.85rem', color: '#52675b' }}><strong>Requests:</strong> {item.special_requests}</p>}
             
             {(item.status === 'pending' || item.status === 'confirmed') && (
-              <div className="status-control" style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+              <div className="status-control" style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', paddingTop: '15px', marginTop: '15px', borderTop: '1px solid rgba(24,62,49,0.08)' }}>
                 {item.payment_status !== 'paid' && (
                   <button 
-                    className="button small" 
+                    className="ce-btn ce-btn-gold" 
                     onClick={() => payOnline(item.booking_id)}
                     disabled={busy === item.booking_id}
-                    style={{ backgroundColor: '#ca9765', borderColor: '#ca9765', color: '#183e31' }}
+                    style={{ padding: '8px 16px', fontSize: '0.8rem' }}
                   >
                     {busy === item.booking_id ? 'Processing...' : 'Pay Online'}
                   </button>
                 )}
                 <button 
-                  className="button outline small" 
+                  className="ce-btn ce-btn-outline" 
                   onClick={() => cancelBooking(item.booking_id)}
                   disabled={busy === item.booking_id}
-                  style={{ color: '#914c49', borderColor: '#f5e0dc' }}
+                  style={{ color: '#914c49', borderColor: '#f5e0dc', padding: '8px 16px', fontSize: '0.8rem' }}
                 >
                   {busy === item.booking_id ? 'Cancelling...' : 'Cancel booking'}
                 </button>

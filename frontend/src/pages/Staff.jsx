@@ -84,30 +84,30 @@ export default function Staff() {
   });
 
   return (
-    <section className="ov-page">
-      <div className="ov-head">
+    <section className="staff-page-wrapper">
+      <div className="staff-header">
         <div>
-          <span className="eyebrow green">OPERATIONS CENTER</span>
-          <h1>Manage bookings</h1>
+          <span className="ce-eyebrow">OPERATIONS CENTER</span>
+          <h1 className="staff-title">Manage <span className="ce-gold-italic">Bookings</span></h1>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
-          <p>Review customer event requests and update their status.</p>
-        </div>
+        <p className="staff-subtitle">Review customer event requests and update their status.</p>
       </div>
 
-      {message && <p className="notice success" role="status">{message}</p>}
-      {error && <p className="notice warning" role="alert">{error}</p>}
+      {message && <div className="ce-alert-success" style={{ marginBottom: '20px' }}>{message}</div>}
+      {error && <div className="auth-status-banner" style={{ borderLeftColor: '#914c49', backgroundColor: '#f5e0dc', color: '#914c49', marginBottom: '20px' }}>{error}</div>}
 
-      {!loading && bookings.length > 0 && (
-        <div className="staff-search">
+      <div className="staff-search-container">
+        <div className="staff-search-wrapper">
+          <span className="staff-search-icon">🔍</span>
           <input
             type="search"
             placeholder="Search by customer name, email, package, or ID..."
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
+            className="staff-search-input"
           />
         </div>
-      )}
+      </div>
 
       {loading && <div className="empty">Loading requests...</div>}
       {!loading && !error && !bookings.length && <div className="empty">No customer requests have arrived yet.</div>}
@@ -115,80 +115,83 @@ export default function Staff() {
         <div className="empty">No bookings match your search.</div>
       )}
 
-      <div className="booking-grid">
+      <div className="staff-grid">
         {filteredBookings.map(item => (
-          <article className="booking-card" key={item.booking_id}>
-            <div className="booking-top">
+          <article className="staff-booking-card" key={item.booking_id}>
+            <div className="staff-card-header">
               <div>
-                <span className="eyebrow green">BOOKING #{item.booking_id}</span>
-                <h3>{item.package_name}</h3>
+                <span className="ce-eyebrow">BOOKING #{item.booking_id}</span>
+                <h3 className="staff-package-name">{item.package_name}</h3>
               </div>
               <span className={`status status-${item.status}`}>{prettyStatus(item.status)}</span>
             </div>
 
-            <div className="booking-details">
-              <div>
-                <small>Customer</small>
-                <strong>{item.full_name}</strong>
-                <small>{item.email}</small>
+            <div className="staff-card-details">
+              <div className="staff-detail-group">
+                <span className="staff-detail-label">Customer</span>
+                <strong className="staff-detail-value">{item.full_name}</strong>
+                <span className="staff-detail-sub">{item.email}</span>
               </div>
-              <div>
-                <small>Event</small>
-                <strong>{item.event_date} · {item.event_time}</strong>
+              <div className="staff-detail-group">
+                <span className="staff-detail-label">Event Date</span>
+                <strong className="staff-detail-value">{item.event_date} · {item.event_time}</strong>
               </div>
-              <div>
-                <small>Guests</small>
-                <strong>{item.guest_count}</strong>
+              <div className="staff-detail-group">
+                <span className="staff-detail-label">Guests</span>
+                <strong className="staff-detail-value">{item.guest_count}</strong>
               </div>
-              <div>
-                <small>Venue</small>
-                <strong>{item.venue}</strong>
+              <div className="staff-detail-group">
+                <span className="staff-detail-label">Venue</span>
+                <strong className="staff-detail-value">{item.venue}</strong>
               </div>
-              <div>
-                <small>Total estimate</small>
-                <strong>{peso(item.quoted_total)}</strong>
+              <div className="staff-detail-group" style={{ gridColumn: '1 / -1' }}>
+                <span className="staff-detail-label">Total Estimate</span>
+                <strong className="staff-detail-value staff-price">{peso(item.quoted_total)}</strong>
               </div>
             </div>
 
-            {item.special_requests && <p className="requests"><strong>Requests:</strong> {item.special_requests}</p>}
+            {item.special_requests && (
+              <div className="staff-requests">
+                <strong>Requests:</strong> {item.special_requests}
+              </div>
+            )}
 
-            <div className="status-control">
-              <label htmlFor={`status-${item.booking_id}`}>Change booking status</label>
-              <select
-                id={`status-${item.booking_id}`}
-                value={item.status}
-                disabled={busy === item.booking_id}
-                onChange={event => update(item.booking_id, event.target.value)}
-              >
-                {statuses.map(status => (
-                  <option value={status} key={status}>{prettyStatus(status)}</option>
-                ))}
-              </select>
-            </div>
+            <div className="staff-card-actions">
+              <div className="staff-status-control">
+                <label>Change status</label>
+                <select
+                  value={item.status}
+                  disabled={busy === item.booking_id}
+                  onChange={event => update(item.booking_id, event.target.value)}
+                  className="staff-select"
+                >
+                  {statuses.map(status => (
+                    <option value={status} key={status}>{prettyStatus(status)}</option>
+                  ))}
+                </select>
+              </div>
 
-            <div className="status-control" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
-              <label style={{ marginBottom: 0 }}>Payment status</label>
-              
-              <div style={{ display: 'flex', gap: '8px' }}>
+              <div className="staff-payment-control">
+                <label>Payment</label>
                 {item.payment_status === 'paid' ? (
-                  <>
+                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                     <span className="status status-completed">
                       PAID {item.payment_method ? `(${item.payment_method})` : ''}
                     </span>
                     {item.status === 'cancelled' && (
-                      <button className="button small outline" onClick={() => refundBooking(item.booking_id)} disabled={busy === item.booking_id} style={{ color: '#914c49', borderColor: '#f5e0dc' }}>
+                      <button className="ce-btn ce-btn-outline" style={{ padding: '6px 12px', fontSize: '0.75rem' }} onClick={() => refundBooking(item.booking_id)} disabled={busy === item.booking_id}>
                         Refund
                       </button>
                     )}
-                  </>
+                  </div>
                 ) : item.payment_status === 'refunded' ? (
                   <span className="status status-cancelled">REFUNDED</span>
                 ) : item.status === 'cancelled' ? (
                   <span className="status status-pending" style={{ background: '#f3eee5', color: '#86715d' }}>UNPAID</span>
                 ) : (
                   <button
-                    className="button small"
-                    type="button"
+                    className="ce-btn ce-btn-gold"
+                    style={{ padding: '8px 16px', fontSize: '0.8rem' }}
                     onClick={() => payBooking(item.booking_id)}
                     disabled={busy === item.booking_id}
                   >
