@@ -55,7 +55,9 @@ export default function AuthForm({ mode }) {
       login(data);
       const next = params.get('next');
       const safeNext = next?.startsWith('/') && !next.startsWith('//') ? next : null;
-      navigate(safeNext || (data.user.role === 'customer' ? '/my-bookings' : '/staff'), { replace: true });
+      
+      navigate(safeNext || (data.user.role === 'customer' ? '/' : '/staff'), { replace: true });
+      
     } catch (err) {
       setError(err.message);
     } finally {

@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { api, peso, prettyStatus } from '../api';
 
 const statuses = ['pending', 'confirmed', 'in_preparation', 'completed', 'cancelled'];
+const tabs = ['all', ...statuses];
 
 export default function Staff() {
   const [bookings, setBookings] = useState([]);
@@ -11,6 +12,7 @@ export default function Staff() {
   const [message, setMessage] = useState('');
   const [busy, setBusy] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeTab, setActiveTab] = useState('all');
 
   const load = useCallback(async () => {
     try {
@@ -74,13 +76,15 @@ export default function Staff() {
   }
 
   const filteredBookings = bookings.filter(item => {
+    const matchesTab = activeTab === 'all' || item.status === activeTab;
     const query = searchQuery.toLowerCase();
-    return (
+    const matchesSearch = 
       item.full_name.toLowerCase().includes(query) ||
       item.email.toLowerCase().includes(query) ||
       item.package_name.toLowerCase().includes(query) ||
-      String(item.booking_id).includes(query)
-    );
+      String(item.booking_id).includes(query);
+      
+    return matchesTab && matchesSearch;
   });
 
   return (
@@ -95,6 +99,27 @@ export default function Staff() {
 
       {message && <div className="ce-alert-success" style={{ marginBottom: '20px' }}>{message}</div>}
       {error && <div className="auth-status-banner" style={{ borderLeftColor: '#914c49', backgroundColor: '#f5e0dc', color: '#914c49', marginBottom: '20px' }}>{error}</div>}
+
+      <div style={{ marginBottom: '20px', display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+        {tabs.map(tab => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            style={{
+              padding: '8px 16px',
+              borderRadius: '99px',
+              border: '1px solid rgba(24, 62, 49, 0.15)',
+              background: activeTab === tab ? 'var(--forest-green)' : 'var(--card-white)',
+              color: activeTab === tab ? 'var(--bg-cream)' : 'var(--forest-green)',
+              fontWeight: '600',
+              cursor: 'pointer',
+              transition: 'all 0.2s'
+            }}
+          >
+            {tab === 'all' ? 'All Bookings' : prettyStatus(tab)}
+          </button>
+        ))}
+      </div>
 
       <div className="staff-search-container">
         <div className="staff-search-wrapper">
@@ -112,7 +137,7 @@ export default function Staff() {
       {loading && <div className="empty">Loading requests...</div>}
       {!loading && !error && !bookings.length && <div className="empty">No customer requests have arrived yet.</div>}
       {!loading && !error && bookings.length > 0 && filteredBookings.length === 0 && (
-        <div className="empty">No bookings match your search.</div>
+        <div className="empty">No bookings match your current filter.</div>
       )}
 
       <div className="staff-grid">

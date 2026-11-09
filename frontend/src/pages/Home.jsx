@@ -1,29 +1,31 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api, peso } from '../api';
+import { useAuth } from '../AuthContext';
 
 const TESTIMONIALS = [
   {
-    headline: '“I really enjoy it”',
+    headline: '“Im so happy!”',
     review: 'CaterEase made our wedding day truly special. The food was a sensation, and their attention to detail was impeccable. They turned our vision into reality. Highly recommended!',
-    author: 'Peter Jackson',
+    author: 'Jims x Peter',
     image: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=1000&auto=format&fit=crop',
   },
   {
-    headline: '“Seamless from start to finish”',
+    headline: '“Sheeesh, Napakaangas!”',
     review: 'Our corporate gala for 120 guests went off without a hitch. The Golden Occasion menu was a hit and the staff handled every dietary request with grace.',
-    author: 'Elena Villanueva',
+    author: 'Pidru',
     image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=1000&auto=format&fit=crop',
   },
   {
     headline: '“Unforgettable family reunion”',
     review: 'Booking was effortless and the Grand Feast spread had everyone talking. We will definitely book CaterEase again for our next milestone!',
-    author: 'Marco Santos',
+    author: 'Darius Santos',
     image: 'https://images.unsplash.com/photo-1555244162-803834f70033?q=80&w=1000&auto=format&fit=crop',
   },
 ];
 
 export default function Home() {
+  const { user } = useAuth();
   const [packages, setPackages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -61,20 +63,22 @@ export default function Home() {
     setNewsletterEmail('');
   };
 
+  const canBook = !user || user.role === 'customer';
+
   return (
     <div className="ce-page">
       <header className="ce-hero">
         <div className="ce-container">
-          <span className="ce-eyebrow">✦ EFFORTLESS CATERING MANAGEMENT</span>
+          <span className="ce-eyebrow">EFFORTLESS CATERING MANAGEMENT</span>
           <h1 className="ce-hero-title">
-            Smart catering management, made <span className="ce-gold-italic">simple.</span>
+            Smart catering management, made <span className="ce-gold-italic">simple!</span>
           </h1>
           <p className="ce-hero-subtitle">
             Explore thoughtfully crafted catering packages, book your celebration, and track every detail in one place.
           </p>
           <div className="ce-hero-actions">
-            <a href="#packages" className="ce-btn ce-btn-gold">Explore packages ↗</a>
-            <Link to="/book" className="ce-btn ce-btn-outline">Book Now</Link>
+            <a href="#packages" className="ce-btn ce-btn-gold">Explore packages</a>
+            {canBook && <Link to="/book" className="ce-btn ce-btn-outline">Book Now!</Link>}
           </div>
         </div>
       </header>
@@ -82,8 +86,8 @@ export default function Home() {
       <main>
         <section className="ce-section ce-gallery-section" id="gallery">
           <div className="ce-container">
-            <span className="ce-eyebrow">EXPLORE OUR GALLERY</span>
-            <h2 className="ce-section-title">Delight in Our <span className="ce-gold">Culinary Creations</span></h2>
+            <span className="ce-eyebrow">EXPLORE OUR GALLERY!!!</span>
+            <h2 className="ce-section-title">Delight in Our <span className="ce-gold">Culinary Creations!</span></h2>
             <div className="ce-gallery-grid">
               <div className="ce-gallery-tall">
                 <img src="https://images.unsplash.com/photo-1551024709-8f23befc6f87?q=80&w=900&auto=format&fit=crop" alt="Appetizers" />
@@ -107,13 +111,13 @@ export default function Home() {
           <div className="ce-container">
             <div className="ce-section-header">
               <div>
-                <span className="ce-eyebrow">CURATED FOR EVERY CELEBRATION</span>
-                <h2 className="ce-section-title">Find Your <span className="ce-gold">Perfect Package</span></h2>
+                <span className="ce-eyebrow">CURATED FOR EVERY CELEBRATION!</span>
+                <h2 className="ce-section-title">Find Your <span className="ce-gold">Perfect Package!</span></h2>
               </div>
               <p className="ce-section-desc">From intimate get-togethers to grand gatherings, explore a menu made for your occasion.</p>
             </div>
 
-            {loading && <div className="empty">Loading packages...</div>}
+            {loading && <div className="empty">Hintay po, loading pa ang packages...</div>}
             {error && <div className="notice warning">{error}</div>}
 
             <div className="ce-packages-grid">
@@ -131,7 +135,9 @@ export default function Home() {
                         <strong className="ce-price">{peso(pkg.price_per_guest)}</strong>
                         <span className="ce-min-guests">per guest · min. {pkg.minimum_guests} guests</span>
                       </div>
-                      <Link to={`/book?package=${pkg.package_id}`} className="ce-btn ce-btn-gold ce-btn-sm">Book now ↗</Link>
+                      {canBook && (
+                        <Link to={`/book?package=${pkg.package_id}`} className="ce-btn ce-btn-gold ce-btn-sm">Book now ↗</Link>
+                      )}
                     </div>
                   </div>
                 </article>
@@ -143,24 +149,24 @@ export default function Home() {
         <section className="ce-section ce-chef-section" id="chefs">
           <div className="ce-container ce-chef-grid">
             <div className="ce-chef-copy">
-              <span className="ce-eyebrow">MEET OUR CHEF</span>
+              <span className="ce-eyebrow">MEET OUR CHEFS</span>
               <h2 className="ce-section-title">The Chefs Behind <span className="ce-gold">Culinary Brilliance</span></h2>
-              <p>Meet the creative genius behind our exceptional cuisine. Chef Isabella and Chef Dominic craft unforgettable dishes that delight every palate.</p>
+              <p>Meet the creative genius behind our exceptional cuisine. Chef Darius and Chef Jims craft unforgettable dishes that delight every palate!</p>
               <a href="#inquiry" className="ce-btn ce-btn-gold">More about us ↗</a>
             </div>
             <div className="ce-chef-cards">
               <article className="ce-chef-card">
                 <div className="ce-chef-photo">
-                  <img src="https://images.unsplash.com/photo-1583394293214-28ded15ee548?q=80&w=800&auto=format&fit=crop" alt="Isabella Sanchez" />
+                  <img src="https://images.unsplash.com/photo-1583394293214-28ded15ee548?q=80&w=800&auto=format&fit=crop" alt="Darius the great" />
                 </div>
-                <h3>Isabella Sanchez</h3>
+                <h3>Darius the great</h3>
                 <span>Executive Chef</span>
               </article>
               <article className="ce-chef-card">
                 <div className="ce-chef-photo">
-                  <img src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?q=80&w=800&auto=format&fit=crop" alt="Dominic Rossi" />
+                  <img src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?q=80&w=800&auto=format&fit=crop" alt="Jims Pidru" />
                 </div>
-                <h3>Dominic Rossi</h3>
+                <h3>Jims Pidru</h3>
                 <span>Sous Chef</span>
               </article>
             </div>
@@ -171,7 +177,7 @@ export default function Home() {
           <div className="ce-banner-overlay" />
           <div className="ce-container ce-banner-content">
             <h2>Ready to book the catering for your event?</h2>
-            <Link to="/book" className="ce-btn ce-btn-gold">Book Now</Link>
+            {canBook && <Link to="/book" className="ce-btn ce-btn-gold">Book Now!</Link>}
           </div>
         </section>
 
@@ -231,6 +237,9 @@ export default function Home() {
       <footer className="ce-footer">
         <div className="ce-container">
           <div className="ce-footer-top">
+            <div className="ce-footer-brand-area">
+              <img src="/logo.png" alt="CaterEase Logo" className="footer-logo" />
+            </div>
             <div className="ce-footer-newsletter">
               <h4>Newsletter subscription</h4>
               <p>Receive our seasonal menus &amp; event updates in your inbox</p>
@@ -242,10 +251,6 @@ export default function Home() {
             </div>
           </div>
           <div className="ce-footer-grid">
-            <div>
-              <div className="ce-footer-brand"><span className="ce-brand-mark">✳</span> Cater<span className="ce-gold">Ease</span></div>
-              <p className="ce-footer-tagline">Beautiful events start with simple planning and unforgettable culinary experiences.</p>
-            </div>
             <div>
               <h4>Quick Links</h4>
               <ul>
@@ -269,7 +274,7 @@ export default function Home() {
               <ul>
                 <li>Email: hello@caterease.com</li>
                 <li>Phone: +63 (02) 8123-4567</li>
-                <li>Address: 123 Celebration Ave, Makati</li>
+                <li>Address: 123 Kanya kanya na to Ave, Sabulakan City</li>
               </ul>
             </div>
           </div>

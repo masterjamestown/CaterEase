@@ -11,7 +11,7 @@ class Booking extends Model
 
     protected $table = 'bookings';
     protected $primaryKey = 'booking_id';
-    
+
     protected $fillable = [
         'customer_id',
         'package_id',
@@ -19,9 +19,10 @@ class Booking extends Model
         'event_time',
         'guest_count',
         'venue',
+        'contact_number',
         'special_requests',
         'quoted_total',
-        'status'
+        'status',
     ];
 
     public function package()
@@ -36,6 +37,7 @@ class Booking extends Model
 
     public function payment()
     {
-        return $this->hasOne(Payment::class, 'booking_id', 'booking_id')->where('status', 'paid');
+        return $this->hasOne(Payment::class, 'booking_id', 'booking_id')
+            ->where('status', 'paid');
     }
 }

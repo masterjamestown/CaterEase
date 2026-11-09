@@ -47,7 +47,7 @@ function Header() {
     <header className="site-header">
       <div className="shell nav-shell">
         <Link className="brand" to="/" aria-label="CaterEase homepage" onClick={goHome}>
-          <span className="brand-mark">✳</span> Cater<span>Ease</span>
+          <img src="/logo.png" alt="CaterEase Logo" className="nav-logo" />
         </Link>
         <nav aria-label="Main navigation" className="nav-links">
           <a href="/" onClick={goHome} className={location.pathname === '/' && !location.hash ? 'active' : ''}>Home</a>
